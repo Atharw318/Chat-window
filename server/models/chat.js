@@ -11,12 +11,12 @@ const schema = new Schema(
       default: false,
     },
     creator: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
     members: [
       {
-        type: Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
       },
     ],

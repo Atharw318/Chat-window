@@ -56,5 +56,13 @@ const Logout = TryCatch(async (req, res) => {
       message: "Logout successfully",
     });
 });
+const searchUser = TryCatch(async (req, res) => {
+  const { name } = req.query;
 
-export { login, newUser, getMyProfile, Logout };
+  return res.status(200).json({
+    success: true,
+    message: name,
+  });
+});
+
+export { login, newUser, getMyProfile, Logout, searchUser };

@@ -14,7 +14,7 @@ const UserManagement = lazy(() => import("./pages/admin/UserManagement"));
 const ChatManagement = lazy(() => import("./pages/admin/ChatManagement"));
 const MessageManagement = lazy(() => import("./pages/admin/MessageManagement"));
 
-let user = false;
+let user = true;
 
 function App() {
   return (

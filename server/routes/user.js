@@ -1,5 +1,11 @@
 import express from "express";
-import { getMyProfile, login, Logout, newUser } from "../controllers/user.js";
+import {
+  getMyProfile,
+  login,
+  Logout,
+  newUser,
+  searchUser,
+} from "../controllers/user.js";
 import { singalAvatar } from "../middlewares/multer.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
@@ -13,5 +19,8 @@ app.use(isAuthenticated);
 
 app.get("/profile", getMyProfile);
 app.get("/logout", Logout);
+
+// Search User
+app.get("/search", searchUser);
 
 export default app;
