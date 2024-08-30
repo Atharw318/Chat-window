@@ -7,7 +7,12 @@ import {
   addMembers,
   removeMember,
   leaveGroup,
+  sendAttatchments,
+  getChatDetails,
+  renameGroup,
+  deleteChat,
 } from "../controllers/chat.js";
+import { attachmentsMulter } from "../middlewares/multer.js";
 
 const app = express.Router();
 
@@ -22,8 +27,10 @@ app.put("/addmembers", addMembers);
 app.put("/removemembers", removeMember);
 app.delete("/leave/:id", leaveGroup);
 
-//Send Attatchments
+app.post("/message", attachmentsMulter, sendAttatchments);
+
 // GEt Message
-// Get Chat detials, rename, delete
+
+app.route("/:id").get(getChatDetails).put(renameGroup).delete(deleteChat);
 
 export default app;

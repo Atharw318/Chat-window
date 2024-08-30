@@ -16,12 +16,12 @@ const schema = new Schema(
       },
     ],
     sender: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     chat: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Chat",
       required: true,
     },
