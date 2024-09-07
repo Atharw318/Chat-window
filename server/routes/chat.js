@@ -11,8 +11,15 @@ import {
   getChatDetails,
   renameGroup,
   deleteChat,
+  getMessages,
 } from "../controllers/chat.js";
 import { attachmentsMulter } from "../middlewares/multer.js";
+import {
+  addMembersValidator,
+  newGroupValidator,
+  removeMembersValidator,
+  validateHandle,
+} from "../lib/validators.js";
 
 const app = express.Router();
 
@@ -20,16 +27,21 @@ const app = express.Router();
 app.use(isAuthenticated);
 
 // Group chat create
-app.post("/new", newGroupChat);
+app.post("/new", newGroupValidator(), validateHandle, newGroupChat);
 app.get("/my", getMyChats);
 app.get("/my/groups", getMyGroups);
-app.put("/addmembers", addMembers);
-app.put("/removemembers", removeMember);
+app.put("/addmembers", addMembersValidator(), validateHandle, addMembers);
+app.put(
+  "/removemembers",
+  removeMembersValidator(),
+  validateHandle,
+  removeMember
+);
 app.delete("/leave/:id", leaveGroup);
 
 app.post("/message", attachmentsMulter, sendAttatchments);
 
-// GEt Message
+app.get("/message/:id", getMessages);
 
 app.route("/:id").get(getChatDetails).put(renameGroup).delete(deleteChat);
 
