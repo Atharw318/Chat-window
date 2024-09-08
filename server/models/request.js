@@ -8,12 +8,12 @@ const schema = new Schema(
       enum: ["pending", "accepted", "rejected"],
     },
     sender: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     receiver: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },

@@ -5,12 +5,16 @@ import {
   Logout,
   newUser,
   searchUser,
+  sendFriendRequest,
+  acceptFriendRequest,
 } from "../controllers/user.js";
 import { singalAvatar } from "../middlewares/multer.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import {
+  acceptFriendRequestValidator,
   loginValidator,
   registerValidator,
+  sendFriendRequestValidator,
   validateHandle,
 } from "../lib/validators.js";
 
@@ -27,5 +31,20 @@ app.get("/logout", Logout);
 
 // Search User
 app.get("/search", searchUser);
+
+//Send Request
+app.put(
+  "/send-request",
+  sendFriendRequestValidator(),
+  validateHandle,
+  sendFriendRequest
+);
+
+app.put(
+  "/accept-request",
+  acceptFriendRequestValidator(),
+  validateHandle,
+  acceptFriendRequest
+);
 
 export default app;

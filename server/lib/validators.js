@@ -1,4 +1,4 @@
-import { body, validationResult, check } from "express-validator";
+import { body, validationResult, check, param, query } from "express-validator";
 import { ErrorHandler } from "../utils/utility.js";
 
 const validateHandle = (req, res, next) => {
@@ -49,6 +49,39 @@ const removeMembersValidator = () => [
   body("chatId", "Please Enter Chat Id").notEmpty(),
 ];
 
+const leaveGroupValidator = () => [
+  param("id", "Please Enter Chat Id").notEmpty(),
+];
+
+const sendAttachmentsValidator = () => [
+  body("chatId", "Please Enter Chat Id").notEmpty(),
+  check("files")
+    .notEmpty()
+    .withMessage("Please Upload Attachments")
+    .isArray({ min: 1, max: 1 - 5 })
+    .withMessage("Attachments must be 1-5"),
+];
+
+const chatIdValidator = () => [param("id", "Please Enter Chat Id").notEmpty()];
+
+const renameGroupValidator = () => [
+  param("id", "Please Enter Chat Id").notEmpty(),
+  body("name", "Please Enter Group NewName").notEmpty(),
+];
+
+const sendFriendRequestValidator = () => [
+  body("userId", "Please Enter User Id").notEmpty(),
+];
+
+const acceptFriendRequestValidator = () => [
+  body("requestId", "Please Enter Request Id").notEmpty(),
+  body("accept")
+    .notEmpty()
+    .withMessage("Please Add Accept")
+    .isBoolean()
+    .withMessage("Accept must be true or false"),
+];
+
 export {
   registerValidator,
   validateHandle,
@@ -56,4 +89,10 @@ export {
   newGroupValidator,
   addMembersValidator,
   removeMembersValidator,
+  leaveGroupValidator,
+  sendAttachmentsValidator,
+  chatIdValidator,
+  renameGroupValidator,
+  sendFriendRequestValidator,
+  acceptFriendRequestValidator,
 };
