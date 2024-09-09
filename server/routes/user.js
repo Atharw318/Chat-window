@@ -7,6 +7,7 @@ import {
   searchUser,
   sendFriendRequest,
   acceptFriendRequest,
+  getMyNotifications,
 } from "../controllers/user.js";
 import { singalAvatar } from "../middlewares/multer.js";
 import { isAuthenticated } from "../middlewares/auth.js";
@@ -46,5 +47,7 @@ app.put(
   validateHandle,
   acceptFriendRequest
 );
+
+app.get("/notifications", getMyNotifications);
 
 export default app;

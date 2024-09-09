@@ -8,7 +8,7 @@ import { Request } from "../models/request.js";
 import { NEW_REQUEST, REFETCH_CHAT } from "../constants/events.js";
 
 //Create new User:-
-const newUser = async (req, res) => {
+const newUser = async (req, res, next) => {
   const { name, username, password, bio } = req.body;
 
   const avatar = {
@@ -42,8 +42,11 @@ const login = TryCatch(async (req, res, next) => {
   sendToken(res, user, 200, `Welcome back, ${user.name}`);
 });
 
-const getMyProfile = TryCatch(async (req, res) => {
+const getMyProfile = TryCatch(async (req, res, next) => {
   const user = await User.findById(req.user);
+
+  if (!user) return next(new ErrorHandler("User not found", 404));
+
   res.status(200).json({
     success: true,
     user,
@@ -118,6 +121,7 @@ const sendFriendRequest = TryCatch(async (req, res, next) => {
 
 const acceptFriendRequest = TryCatch(async (req, res, next) => {
   const { requestId, accept } = req.body;
+
   const request = await Request.findById(requestId)
     .populate("sender", "name")
     .populate("receiver", "name");
@@ -125,7 +129,9 @@ const acceptFriendRequest = TryCatch(async (req, res, next) => {
   if (!request) return next(new ErrorHandler("Request not found", 404));
 
   if (request.receiver._id.toString() !== req.user.toString())
-    return next(new ErrorHandler("You are not not authorized", 401));
+    return next(
+      new ErrorHandler("You are not authorized to accept this request", 401)
+    );
 
   if (!accept) {
     await request.deleteOne();
@@ -135,7 +141,7 @@ const acceptFriendRequest = TryCatch(async (req, res, next) => {
     });
   }
 
-  const members = [request.sender._id, req.receiver._id];
+  const members = [request.sender._id, request.receiver._id];
 
   await Promise.all([
     Chat.create({
@@ -154,6 +160,27 @@ const acceptFriendRequest = TryCatch(async (req, res, next) => {
   });
 });
 
+const getMyNotifications = TryCatch(async (req, res, next) => {
+  const requests = await Request.find({ receiver: req.user }).populate(
+    "sender",
+    "name avatar"
+  );
+
+  const allRequests = requests.map(({ _id, sender }) => ({
+    _id,
+    sender: {
+      _id: sender._id,
+      name: sender.name,
+      avatar: sender.avatar.url,
+    },
+  }));
+
+  return res.status(200).json({
+    success: true,
+    allRequests,
+  });
+});
+
 export {
   login,
   newUser,
@@ -162,4 +189,5 @@ export {
   searchUser,
   sendFriendRequest,
   acceptFriendRequest,
+  getMyNotifications,
 };
